@@ -1,0 +1,59 @@
+// prisma/schema.prisma
+//
+// Built strictly around the admin Trip Requests page (app/admin/page.tsx).
+// Field names, status values and vehicle types match that page exactly,
+// so swapping MOCK_REQUESTS for a real query needs no renaming.
+//
+// generator + datasource blocks are unchanged from your current file.
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum TripRequestStatus {
+  new
+  contacted
+  confirmed
+  cancelled
+}
+
+enum VehicleType {
+  bus
+  minibus
+  van
+  no_preference
+}
+
+model TripRequest {
+  id  String @id @default(cuid())
+  ref String @unique // e.g. SFW-2026-0042, generated server-side on submit
+
+  // Customer
+  fullName String
+  email    String
+  phone    String
+
+  // Trip
+  pickup        String
+  destination   String
+  isRoundTrip   Boolean   @default(false)
+  departureDate DateTime
+  returnDate    DateTime? // only set when isRoundTrip is true
+
+  vehicleType         VehicleType
+  passengerCount      Int
+  specialRequirements String? // optional textarea on the /book form
+
+  // Admin workflow
+  status      TripRequestStatus @default(new)
+  submittedAt DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+
+  @@index([status])
+  @@index([submittedAt])
+}
