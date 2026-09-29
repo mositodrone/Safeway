@@ -42,11 +42,11 @@ export const bookingSchema = z
     returnDate: z.string().optional(),
 
     vehicleType: z.enum(['bus', 'minibus', 'van', 'no_preference'], {
-  errorMap: () => ({ message: 'Choose a vehicle type' }),
-}),
+       error: 'Choose a vehicle type',
+    }),
 
     passengerCount: z
-      .number({ invalid_type_error: 'Enter number of passengers' })
+      .number({ error: 'Enter number of passengers' })
       .int()
       .min(1, 'At least 1 passenger')
       .max(30, 'For groups over 30, please call us directly'),
@@ -66,10 +66,6 @@ export const bookingSchema = z
       .trim()
       .regex(phoneRegex, 'Enter a valid Nigerian phone number'),
   })
-  // Cross-field rule: return date is required, and must be after departure,
-  // ONLY when isRoundTrip is true. This is exactly the kind of rule that's
-  // awkward to express with plain HTML `required` attributes but trivial
-  // with Zod's .refine().
   .refine(
     data => {
       if (!data.isRoundTrip) return true
@@ -79,6 +75,7 @@ export const bookingSchema = z
   )
   .refine(
     data => {
+      // 🛡️ Added guard: Ensure returnDate is defined before passing to new Date()
       if (!data.isRoundTrip || !data.returnDate) return true
       return new Date(data.returnDate) > new Date(data.departureDate)
     },

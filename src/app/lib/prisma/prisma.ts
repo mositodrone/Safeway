@@ -18,7 +18,7 @@
 import { PrismaClient } from '../generated/prisma/client'
 import { PrismaNeon } from '@prisma/adapter-neon'
 
-const connectionString = process.env.DATABASE_URL!
+const connectionString = process.env.DATABASE_URL_POOLED!
 
 const adapter = new PrismaNeon({ connectionString })
 
