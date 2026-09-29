@@ -1,4 +1,4 @@
-// app/book/actions.ts
+// app/booking/actions.ts
 'use server'
 
 import { bookingSchema, type BookingFormValues } from '../schemas/booking.schema'

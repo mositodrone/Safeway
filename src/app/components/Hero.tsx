@@ -176,7 +176,7 @@ export default function Hero() {
             </p>
 
             <div className="mt-8 flex flex-wrap items-center gap-4">
-              <Link href="/book" className="hero-cta group inline-flex items-center gap-2 rounded-full bg-[#E2A63B] px-7 py-3.5 font-[family-name:var(--font-display)] text-sm font-semibold text-[#0D1424] transition-colors hover:bg-[#EDB65A] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0D1424]">
+              <Link href="/booking" className="hero-cta group inline-flex items-center gap-2 rounded-full bg-[#E2A63B] px-7 py-3.5 font-[family-name:var(--font-display)] text-sm font-semibold text-[#0D1424] transition-colors hover:bg-[#EDB65A] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0D1424]">
                 Book a trip
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" className="transition-transform group-hover:translate-x-0.5">
                   <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
@@ -214,7 +214,7 @@ export default function Hero() {
               <span className="rounded-full bg-[#EEF1F5] px-3 py-1 font-[family-name:var(--font-body)] text-xs font-medium text-[#2A3A5C]">Coaster bus</span>
             </div>
             <div className="my-4 border-t border-dashed border-[#0D1424]/15" />
-            <Link href="/book" className="font-[family-name:var(--font-display)] flex w-full items-center justify-center gap-2 rounded-xl bg-[#0D1424] py-3 text-sm font-semibold text-white transition-colors hover:bg-[#1A2438] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0D1424]">
+            <Link href="/booking" className="font-[family-name:var(--font-display)] flex w-full items-center justify-center gap-2 rounded-xl bg-[#0D1424] py-3 text-sm font-semibold text-white transition-colors hover:bg-[#1A2438] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0D1424]">
               Start your request
             </Link>
           </div>
@@ -297,7 +297,7 @@ export default function Hero() {
             <p className="font-[family-name:var(--font-body)] mt-2 max-w-xs text-sm leading-relaxed text-white/50">Road travel across Lagos and nearby states, booked online, confirmed by phone.</p>
           </div>
           <div className="footer-fade flex flex-col gap-2 font-[family-name:var(--font-body)] text-sm text-white/70">
-            <Link href="/book" className="transition-colors hover:text-white">Book a trip</Link>
+            <Link href="/booking" className="transition-colors hover:text-white">Book a trip</Link>
             <Link href="#fleet" className="transition-colors hover:text-white">Our buses</Link>
           </div>
         </div>
