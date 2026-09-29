@@ -19,6 +19,7 @@ import { usePathname } from 'next/navigation'
 import { Space_Grotesk, Inter } from 'next/font/google'
 import { Menu, X } from 'lucide-react'
 import {  Show, UserButton  } from '@clerk/nextjs';
+import { scrollToHash } from '../lib/scrollToHash'
 
 const display = Space_Grotesk({
   subsets: ['latin'],
@@ -82,6 +83,15 @@ export default function Navbar() {
             <li key={link.href}>
               <Link
                 href={link.href}
+                onClick={(e) => {
+                  // Only intercept when already on the page the anchor lives
+                  // on — from anywhere else, let Link navigate normally and
+                  // Hero's mount effect smooth-scrolls once it lands.
+                  if (pathname === '/') {
+                    e.preventDefault()
+                    scrollToHash(link.href)
+                  }
+                }}
                 className="group relative inline-flex items-center px-4 py-2 font-[family-name:var(--font-body)] text-sm font-medium text-[#4B5768] transition-colors hover:text-[#0D1424]"
               >
                 {link.label}
@@ -136,6 +146,13 @@ export default function Navbar() {
             <Link
               key={link.href}
               href={link.href}
+              onClick={(e) => {
+                if (pathname === '/') {
+                  e.preventDefault()
+                  scrollToHash(link.href)
+                }
+                setMobileOpen(false)
+              }}
               className="font-[family-name:var(--font-body)] rounded-lg px-3 py-3 text-[0.95rem] font-medium text-[#0D1424] transition-colors hover:bg-[#EEF1F5]"
             >
               {link.label}

@@ -8,13 +8,14 @@
 // fleet-interior.jpg to public/images/, drop this in components/Hero.tsx,
 // render <Hero /> from app/page.tsx.
 
-import { useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { Space_Grotesk, Inter } from 'next/font/google'
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { scrollToHash } from '../lib/scrollToHash'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -40,6 +41,18 @@ const ON_REQUEST_STATES = ['Rivers', 'Osun', 'Ondo']
 
 export default function Hero() {
   const rootRef = useRef<HTMLDivElement>(null)
+
+  // Covers arriving here FROM another page via a link like "/#fleet" —
+  // Next.js has already jumped to the section by the time this mounts, so
+  // this re-does it smoothly. Same-page clicks never reach this; those are
+  // handled instantly by the onClick handlers below instead.
+  useEffect(() => {
+    if (!window.location.hash) return
+    const id = window.location.hash.slice(1)
+    requestAnimationFrame(() => {
+      document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    })
+  }, [])
 
   useGSAP(() => {
     // ── HERO ────────────────────────────────────────────────────────────
@@ -182,7 +195,7 @@ export default function Hero() {
                   <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               </Link>
-              <Link href="#fleet" className="hero-cta font-[family-name:var(--font-body)] inline-flex items-center gap-1.5 rounded-full border border-[#0D1424]/15 px-6 py-3.5 text-sm font-medium text-[#0D1424] transition-colors hover:border-[#0D1424]/30 hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0D1424]">
+              <Link href="#fleet" onClick={(e) => { e.preventDefault(); scrollToHash('#fleet') }} className="hero-cta font-[family-name:var(--font-body)] inline-flex items-center gap-1.5 rounded-full border border-[#0D1424]/15 px-6 py-3.5 text-sm font-medium text-[#0D1424] transition-colors hover:border-[#0D1424]/30 hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0D1424]">
                 See our buses
               </Link>
             </div>
@@ -222,7 +235,7 @@ export default function Hero() {
       </section>
 
       {/* ══════════════════════════ HOW IT WORKS ══════════════════════════ */}
-      <section className="bg-white px-6 py-20 sm:px-10 lg:px-16 lg:py-28">
+      <section id="how-it-works" className="scroll-mt-24 bg-white px-6 py-20 sm:px-10 lg:px-16 lg:py-28">
         <div className="mx-auto max-w-6xl">
           <h2 className="font-[family-name:var(--font-display)] max-w-md text-3xl font-semibold tracking-tight text-[#0D1424] sm:text-4xl">How booking works</h2>
           <p className="font-[family-name:var(--font-body)] mt-3 max-w-md text-[#4B5768]">No app to download, no account required to get started.</p>
@@ -240,30 +253,57 @@ export default function Hero() {
       </section>
 
       {/* ══════════════════════════ FLEET ══════════════════════════ */}
-      <section id="fleet" className="bg-[#EEF1F5] px-6 py-20 sm:px-10 lg:px-16 lg:py-28">
+      <section id="fleet" className="scroll-mt-24 bg-[#EEF1F5] px-6 py-20 sm:px-10 lg:px-16 lg:py-28">
         <div className="mx-auto max-w-6xl">
           <h2 className="font-[family-name:var(--font-display)] text-3xl font-semibold tracking-tight text-[#0D1424] sm:text-4xl">Our buses</h2>
-          <p className="font-[family-name:var(--font-body)] mt-3 max-w-md text-[#4B5768]">Toyota Coaster buses, kept in regular service for intercity trips.</p>
+          <p className="font-[family-name:var(--font-body)] mt-3 max-w-md text-[#4B5768]">Two vehicle types kept in regular service for intercity trips — pick whichever fits your group.</p>
 
-          <div className="fleet-grid mt-10 grid grid-cols-1 gap-5 overflow-hidden rounded-2xl bg-white shadow-[0_10px_40px_-15px_rgba(13,20,36,0.15)] sm:grid-cols-2">
-            <div className="fleet-exterior-card relative min-h-[260px] sm:min-h-[340px]">
-              <Image src="/images/fleet-exterior.jpg" alt="Toyota Coaster bus exterior" fill sizes="(min-width: 640px) 50vw, 100vw" className="fleet-img object-cover" />
+          <div className="fleet-grid mt-10 flex flex-col gap-10">
+
+            {/* ── Toyota Coaster ── */}
+            <div>
+              <div className="mb-4 flex items-baseline justify-between">
+                <h3 className="font-[family-name:var(--font-display)] text-xl font-semibold text-[#0D1424]">Toyota Coaster</h3>
+                <span className="font-[family-name:var(--font-body)] rounded-full bg-white px-3 py-1 text-xs font-medium text-[#2A3A5C] shadow-sm">Larger groups</span>
+              </div>
+              <div className="grid grid-cols-1 gap-5 overflow-hidden rounded-2xl bg-white shadow-[0_10px_40px_-15px_rgba(13,20,36,0.15)] sm:grid-cols-2">
+                <div className="fleet-exterior-card relative min-h-[260px] sm:min-h-[340px]">
+                  <Image src="/images/fleet-exterior.jpg" alt="Toyota Coaster bus exterior" fill sizes="(min-width: 640px) 50vw, 100vw" className="fleet-img object-cover" />
+                </div>
+                <div className="fleet-interior-card relative min-h-[260px] sm:min-h-[340px]">
+                  <Image src="/images/fleet-interior.jpg" alt="Toyota Coaster bus interior seating" fill sizes="(min-width: 640px) 50vw, 100vw" className="fleet-img object-cover" />
+                </div>
+              </div>
             </div>
-            <div className="fleet-interior-card relative min-h-[260px] sm:min-h-[340px]">
-              <Image src="/images/fleet-interior.jpg" alt="Toyota Coaster bus interior seating" fill sizes="(min-width: 640px) 50vw, 100vw" className="fleet-img object-cover" />
+
+            {/* ── Toyota Hiace ── */}
+            <div>
+              <div className="mb-4 flex items-baseline justify-between">
+                <h3 className="font-[family-name:var(--font-display)] text-xl font-semibold text-[#0D1424]">Toyota Hiace</h3>
+                <span className="font-[family-name:var(--font-body)] rounded-full bg-white px-3 py-1 text-xs font-medium text-[#2A3A5C] shadow-sm">Smaller groups</span>
+              </div>
+              <div className="grid grid-cols-1 gap-5 overflow-hidden rounded-2xl bg-white shadow-[0_10px_40px_-15px_rgba(13,20,36,0.15)] sm:grid-cols-2">
+                <div className="fleet-exterior-card relative min-h-[260px] sm:min-h-[340px]">
+                  <Image src="/images/hiace-exterior.jpg" alt="Toyota Hiace bus exterior" fill sizes="(min-width: 640px) 50vw, 100vw" className="fleet-img object-cover" />
+                </div>
+                <div className="fleet-interior-card relative min-h-[260px] sm:min-h-[340px]">
+                  <Image src="/images/hiace-interior.jpg" alt="Toyota Hiace bus interior seating" fill sizes="(min-width: 640px) 50vw, 100vw" className="fleet-img object-cover" />
+                </div>
+              </div>
             </div>
+
           </div>
 
-          <div className="fleet-facts mt-6 flex flex-wrap items-center gap-x-8 gap-y-3 px-1">
-            <div className="fleet-fact flex items-center gap-2 text-sm text-[#4B5768]"><span className="h-1.5 w-1.5 rounded-full bg-[#E2A63B]" />Toyota Coaster</div>
+          <div className="fleet-facts mt-8 flex flex-wrap items-center gap-x-8 gap-y-3 px-1">
+            <div className="fleet-fact flex items-center gap-2 text-sm text-[#4B5768]"><span className="h-1.5 w-1.5 rounded-full bg-[#E2A63B]" />Coaster &amp; Hiace, both in regular service</div>
             <div className="fleet-fact flex items-center gap-2 text-sm text-[#4B5768]"><span className="h-1.5 w-1.5 rounded-full bg-[#E2A63B]" />Cushioned seating</div>
-            <div className="fleet-fact flex items-center gap-2 text-sm text-[#4B5768]"><span className="h-1.5 w-1.5 rounded-full bg-[#E2A63B]" />8–10 buses in service</div>
+            <div className="fleet-fact flex items-center gap-2 text-sm text-[#4B5768]"><span className="h-1.5 w-1.5 rounded-full bg-[#E2A63B]" />8–10 vehicles in service</div>
           </div>
         </div>
       </section>
 
       {/* ══════════════════════════ SERVICE AREA ══════════════════════════ */}
-      <section id="coverage" className="bg-white px-6 py-20 sm:px-10 lg:px-16 lg:py-28">
+      <section id="coverage" className="scroll-mt-24 bg-white px-6 py-20 sm:px-10 lg:px-16 lg:py-28">
         <div className="mx-auto max-w-4xl">
           <h2 className="coverage-heading font-[family-name:var(--font-display)] text-3xl font-semibold tracking-tight text-[#0D1424] sm:text-4xl">Where we operate</h2>
 
@@ -298,7 +338,7 @@ export default function Hero() {
           </div>
           <div className="footer-fade flex flex-col gap-2 font-[family-name:var(--font-body)] text-sm text-white/70">
             <Link href="/booking" className="transition-colors hover:text-white">Book a trip</Link>
-            <Link href="#fleet" className="transition-colors hover:text-white">Our buses</Link>
+            <Link href="#fleet" onClick={(e) => { e.preventDefault(); scrollToHash('#fleet') }} className="transition-colors hover:text-white">Our buses</Link>
           </div>
         </div>
         <div className="footer-fade mx-auto mt-10 max-w-6xl border-t border-white/10 pt-6">
